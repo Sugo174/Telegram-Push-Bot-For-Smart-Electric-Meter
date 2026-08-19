@@ -122,3 +122,51 @@ The Group Manager provides administrative tools for:
 - aiohttp-socks
 - python-dotenv
 - SOCKS5 proxy
+
+## How It Works
+
+The system processes meter events through the following pipeline:
+
+```text
+Smart Meter
+     │
+     │ Push message
+     ▼
+Push Server
+     │
+     ├── Parse packet
+     ├── Filter irrelevant data
+     └── Store event
+     │
+     ▼
+SQLite Database
+     │
+     │ Event + meter information
+     ▼
+Telegram Bot
+     │
+     ├── Check user access
+     ├── Determine notification language
+     └── Deliver notification
+     │
+     ▼
+Telegram User
+```
+
+## Installation
+
+### Requirements
+
+- Python 3.10+
+- Telegram Bot API credentials
+- SOCKS5 proxy (if required by the deployment environment)
+
+### Configuration
+
+Create a `.env` file in the project root based on `.env.example`:
+
+```env
+TELEGRAM_BOT_TOKEN=your_bot_token
+ADMIN_CHAT_ID=your_admin_chat_id
+PROXY_URL=your_socks5_proxy_url
+```
