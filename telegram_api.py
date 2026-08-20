@@ -3,7 +3,7 @@ import os
 import ssl
 import json
 import aiohttp
-from aiohttp_socks import ProxyConnector  # ← КРИТИЧЕСКИ ВАЖНО
+from aiohttp_socks import ProxyConnector  
 from dotenv import load_dotenv
 from database import get_setting, set_setting
 
