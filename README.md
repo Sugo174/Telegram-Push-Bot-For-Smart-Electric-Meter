@@ -203,3 +203,16 @@ The `group_manager.py` utility can be launched separately when access groups nee
 ```bash
 python group_manager.py
 ```
+
+## Project Structure
+
+- `app.py` — Entry point for the Telegram bot.
+- `database.py` — SQLite database operations and event data management.
+- `group_manager.py` — Standalone utility for managing meter access groups.
+- `handlers.py` — Telegram bot commands and user interaction handlers.
+- `push_server.py` — TCP server for receiving and processing smart meter PUSH messages.
+- `telegram_api.py` — Helpers for interacting with the Telegram Bot API.
+- `requirements.txt` — Required Python dependencies.
+- `.env.example` — Template for environment variables and server settings.
+- `.gitignore` — Files and directories excluded from version control.
+- `README.md` — Project overview and setup instructions.
