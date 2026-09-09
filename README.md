@@ -250,6 +250,26 @@ The PUSH server processes messages only for meters already registered through a 
 - Packets with a zero event bitmask are ignored.
 - Stored event timestamps represent the server processing time in UTC, rather than a timestamp extracted from the meter.
 
+## Media
+
+## Screenshots
+
+### Main Menu
+
+![Main Menu](screenshots/Main-menu.png)
+
+### Push Notification
+
+![Push Notification](screenshots/02-push-notification.png)
+
+### Push Archive
+
+![Push Archive](screenshots/03-push-archive.png)
+
+### Group Management
+
+![Group Management](screenshots/04-group-management.png)
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
