@@ -256,19 +256,23 @@ The PUSH server processes messages only for meters already registered through a 
 
 ### Main Menu
 
-![Main Menu](screenshots/Main-menu.png)
+![Main Menu](assets/screenshots/Main-menu.png)
 
-### Push Notification
+### Settings
 
-![Push Notification](screenshots/02-push-notification.png)
+![Push Notification](assets/screenshots/Settings.png)
+
+### Connection
+
+![Push Notification](assets/screenshots/Connection.png)
 
 ### Push Archive
 
-![Push Archive](screenshots/03-push-archive.png)
+![Push Archive](assets/screenshots/Archive.png)
 
-### Group Management
+### Languages
 
-![Group Management](screenshots/04-group-management.png)
+![Group Management](assets/screenshots/Languages.png)
 
 ## License
 
