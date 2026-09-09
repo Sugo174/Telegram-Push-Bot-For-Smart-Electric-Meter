@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 ADMIN_CHAT_ID = int(os.getenv("ADMIN_CHAT_ID", 0))
 DB_PATH = os.path.abspath("emis_events.db")
+PUSH_SERVER_PORT = int(os.getenv("PUSH_SERVER_PORT", "23224"))
 
 # ---------------- LOGGING ----------------
 
@@ -174,10 +175,10 @@ async def start_server():
     server = await asyncio.start_server(
         handle_client,
         "0.0.0.0",
-        23224
+        PUSH_SERVER_PORT
     )
-
-    logger.info("PUSH server started on port 23224")
+    
+    logger.info(f"PUSH server started on port {PUSH_SERVER_PORT}")
 
     async with server:
         await server.serve_forever()
