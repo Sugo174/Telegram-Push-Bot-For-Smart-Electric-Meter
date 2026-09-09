@@ -252,6 +252,12 @@ The PUSH server processes messages only for meters already registered through a 
 
 ## Media
 
+## Demo video
+
+Watch the demo video in the [latest release]().
+
+**Direct download:** [demo-video.mp4](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/blob/main/assets/video/demo-video.mp4)
+
 ## Screenshots
 
 ### Main Menu
