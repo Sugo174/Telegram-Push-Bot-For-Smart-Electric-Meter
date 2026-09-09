@@ -158,7 +158,7 @@ Telegram User
 ### Requirements
 
 - Python 3.10+
-- Telegram Bot API credentials
+- Telegram Bot Token
 - SOCKS5 proxy (if required by the deployment environment)
 
 ### Setup
@@ -167,33 +167,39 @@ Telegram User
 
 2. Install the required dependencies:
 
-```Bash
+```bash
 pip install -r requirements.txt
 ```
 
-3. Create a .env file based on .env.example:
-   
+3. Create a `.env` file based on `.env.example`:
+
 ```env
-# Telegram Bot API token
-TELEGRAM_BOT_TOKEN=
-
-# Telegram chat ID of the administrator
-ADMIN_CHAT_ID=
-
-# SOCKS5 proxy URL (optional)
-PROXY_URL=
-
-# Port used by the smart meter PUSH server
-PUSH_SERVER_PORT=
+TELEGRAM_BOT_TOKEN=your_bot_token
+ADMIN_CHAT_ID=your_admin_chat_id
+PROXY_URL=your_proxy_url
+PUSH_SERVER_PORT=23224
 ```
 
-4. Start the push server:
+`PUSH_SERVER_PORT` defines the TCP port used by the server to receive PUSH messages from smart meters.
 
-```Bash
+The default port is `23224`. You can change this value in the `.env` file if another port is required. No changes to the Python source code are necessary.
+
+4. Start the PUSH server:
+
+```bash
 python push_server.py
 ```
+
 5. Start the Telegram bot:
 
-```Bash
+```bash
 python app.py
+```
+
+### Group Management
+
+The `group_manager.py` utility can be launched separately when access groups need to be created or modified:
+
+```bash
+python group_manager.py
 ```
