@@ -249,3 +249,7 @@ The PUSH server processes messages only for meters already registered through a 
 - Messages are processed only for meters registered through a single-meter connection or an access group.
 - Packets with a zero event bitmask are ignored.
 - Stored event timestamps represent the server processing time in UTC, rather than a timestamp extracted from the meter.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
