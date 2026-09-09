@@ -174,10 +174,19 @@ pip install -r requirements.txt
 3. Create a .env file based on .env.example:
    
 ```env
-TELEGRAM_BOT_TOKEN=your_bot_token
-ADMIN_CHAT_ID=your_admin_chat_id
-PROXY_URL=your_proxy_url
+# Telegram Bot API token
+TELEGRAM_BOT_TOKEN=
+
+# Telegram chat ID of the administrator
+ADMIN_CHAT_ID=
+
+# SOCKS5 proxy URL (optional)
+PROXY_URL=
+
+# Port used by the smart meter PUSH server
+PUSH_SERVER_PORT=
 ```
+
 4. Start the push server:
 
 ```Bash
