@@ -161,12 +161,30 @@ Telegram User
 - Telegram Bot API credentials
 - SOCKS5 proxy (if required by the deployment environment)
 
-### Configuration
+### Setup
 
-Create a `.env` file in the project root based on `.env.example`:
+1. Clone the repository.
 
+2. Install the required dependencies:
+
+```Bash
+pip install -r requirements.txt
+```
+
+3. Create a .env file based on .env.example:
+   
 ```env
 TELEGRAM_BOT_TOKEN=your_bot_token
 ADMIN_CHAT_ID=your_admin_chat_id
-PROXY_URL=your_socks5_proxy_url
+PROXY_URL=your_proxy_url
+```
+4. Start the push server:
+
+```Bash
+python push_server.py
+```
+5. Start the Telegram bot:
+
+```Bash
+python app.py
 ```
