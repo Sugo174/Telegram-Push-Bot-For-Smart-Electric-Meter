@@ -2,6 +2,18 @@
 
 Python-based Telegram bot for receiving, processing, and delivering real-time push notifications from smart meters.
 
+## Table of Contents
+
+- [Overview](#overview)
+- [System Architecture](#system-architecture)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [How It Works](#how-it-works)
+- [Installation](#installation)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Compatibility and Limitations](#compatibility-and-limitations)
+
 ## Overview
 
 This project provides a notification system for monitoring smart meter events.
@@ -216,3 +228,23 @@ python group_manager.py
 - `.env.example` — Template for environment variables and server settings.
 - `.gitignore` — Files and directories excluded from version control.
 - `README.md` — Project overview and setup instructions.
+
+## Usage
+
+1. Keep both `push_server.py` and `app.py` running in separate terminals.
+2. Configure your smart meter to send PUSH messages to the server's IP address and the port specified by `PUSH_SERVER_PORT`. The server must be reachable from the meter's network.
+3. Open your Telegram bot and send `/start`.
+4. Select your preferred interface language.
+5. Connect a single meter using its meter number, or connect a meter group using an access key created with `group_manager.py`.
+6. Receive notifications when the server processes events from your connected meters.
+7. Open the push archive to browse received notifications or clear your history.
+
+The PUSH server processes messages only for meters already registered through a single-meter connection or an access group.
+
+## Compatibility and Limitations
+
+- The current PUSH parser expects an 11-digit meter serial number starting with `971` or `976`.
+- PUSH messages must match the packet format expected by `push_server.py`. Other meter models or packet formats may require parser changes.
+- Messages are processed only for meters registered through a single-meter connection or an access group.
+- Packets with a zero event bitmask are ignored.
+- Stored event timestamps represent the server processing time in UTC, rather than a timestamp extracted from the meter.
