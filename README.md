@@ -35,7 +35,8 @@ The server:
 - Receives push packets from meters
 - Parses incoming messages
 - Filters irrelevant or invalid packets
-- Extracts meter numbers, timestamps, and event data
+- Extracts meter numbers and event data
+- Records the server processing time in UTC for each stored event
 - Stores processed events in a SQLite database
 - Maintains daily rotating push logs
 
