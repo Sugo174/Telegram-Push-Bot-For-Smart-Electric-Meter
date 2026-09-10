@@ -260,6 +260,7 @@ python group_manager.py
 - `.env.example` — Template for environment variables and server settings.
 - `.gitignore` — Files and directories excluded from version control.
 - `README.md` — Project overview and setup instructions.
+- `CHANGELOG.md` — Version history and notable project changes.
 
 ## Usage
 
