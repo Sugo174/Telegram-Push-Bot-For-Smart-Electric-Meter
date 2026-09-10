@@ -216,9 +216,16 @@ PROXY_URL=your_proxy_url
 PUSH_SERVER_PORT=23224
 ```
 
-`PUSH_SERVER_PORT` defines the TCP port used by the server to receive PUSH messages from smart meters.
+### Configuration
 
-The default port is `23224`. You can change this value in the `.env` file if another port is required. No changes to the Python source code are necessary.
+| Variable | Description |
+| --- | --- |
+| `TELEGRAM_BOT_TOKEN` | Telegram bot token obtained from BotFather. |
+| `ADMIN_CHAT_ID` | Numeric Telegram chat ID used for the administrator account. |
+| `PROXY_URL` | Full SOCKS5 proxy address, for example `socks5://username:password@host:port`. |
+| `PUSH_SERVER_PORT` | TCP port used to receive PUSH messages from smart meters. Defaults to `23224`. |
+
+Keep the `.env` file private. It is excluded from Git through `.gitignore` and must never be committed to the repository.
 
 5. Start the PUSH server:
 
