@@ -1,4 +1,4 @@
-aiohttp
-aiohttp-socks
-python-dotenv
-aiosqlite
+aiohttp==3.13.3
+aiohttp-socks==0.11.0
+python-dotenv==1.2.1
+aiosqlite==0.22.1
