@@ -174,7 +174,7 @@ Telegram User
 
 - Python 3.10+
 - Telegram Bot Token
-- SOCKS5 proxy (if required by the deployment environment)
+- SOCKS5 proxy (required by the current release)
 
 ### Setup
 
@@ -251,6 +251,9 @@ The PUSH server processes messages only for meters already registered through a 
 - Messages are processed only for meters registered through a single-meter connection or an access group.
 - Packets with a zero event bitmask are ignored.
 - Stored event timestamps represent the server processing time in UTC, rather than a timestamp extracted from the meter.
+- The current release requires a SOCKS5 proxy configured through `PROXY_URL`.
+- Direct Telegram API connectivity without a proxy is planned but has not yet been tested.
+- TLS certificate verification is disabled for Telegram API connections in the current proxy configuration because it is required by the tested deployment environment. Use only a trusted proxy server.
 
 ## Media
 
