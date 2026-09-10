@@ -257,33 +257,33 @@ The PUSH server processes messages only for meters already registered through a 
 
 ## Media
 
-## Demo Video
+### Demo Video
 
 Watch the demo video in the [latest release](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/latest).
 
 **Direct download:** [demo-video.mp4](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/download/v1.0.0/demo-video.mp4)
 
-## Screenshots
+### Screenshots
 
-### Main Menu
+#### Main Menu
 
-![Main Menu](assets/screenshots/Main-menu.png)
+![Telegram bot main menu](assets/screenshots/Main-menu.png)
 
-### Settings
+#### Settings
 
-![Push Notification](assets/screenshots/Settings.png)
+![PUSH notification and meter connection settings](assets/screenshots/Settings.png)
 
-### Connection
+#### Connection Information
 
-![Push Notification](assets/screenshots/Connection.png)
+![Connected meter group information](assets/screenshots/Connection.png)
 
-### Push Archive
+#### PUSH Archive
 
-![Push Archive](assets/screenshots/Archive.png)
+![Received smart meter notifications archive](assets/screenshots/Archive.png)
 
-### Languages
+#### Language Selection
 
-![Group Management](assets/screenshots/Languages.png)
+![Telegram bot interface language selection](assets/screenshots/Languages.png)
 
 ## License
 
