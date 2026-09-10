@@ -173,6 +173,7 @@ Telegram User
 ### Requirements
 
 - Python 3.10+
+- Tested with Python 3.14
 - Telegram Bot Token
 - SOCKS5 proxy (required by the current release)
 
