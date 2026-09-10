@@ -178,15 +178,35 @@ Telegram User
 
 ### Setup
 
-1. Clone the repository.
+1. Clone the repository and open the project directory:
 
-2. Install the required dependencies:
+```bash
+git clone https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter.git
+cd Telegram-Push-Bot-For-Smart-Electric-Meter
+```
+
+````md
+2. Create and activate a virtual environment.
+
+Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+Linux and macOS:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+````
+3. Install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Create a `.env` file based on `.env.example`:
+4. Create a `.env` file based on `.env.example`:
 
 ```env
 TELEGRAM_BOT_TOKEN=your_bot_token
@@ -199,13 +219,13 @@ PUSH_SERVER_PORT=23224
 
 The default port is `23224`. You can change this value in the `.env` file if another port is required. No changes to the Python source code are necessary.
 
-4. Start the PUSH server:
+5. Start the PUSH server:
 
 ```bash
 python push_server.py
 ```
 
-5. Start the Telegram bot:
+6. Start the Telegram bot:
 
 ```bash
 python app.py
