@@ -13,6 +13,8 @@ Python-based Telegram bot for receiving, processing, and delivering real-time pu
 - [Project Structure](#project-structure)
 - [Usage](#usage)
 - [Compatibility and Limitations](#compatibility-and-limitations)
+- [Media](#media)
+- [License](#license)
 
 ## Overview
 
@@ -252,11 +254,11 @@ The PUSH server processes messages only for meters already registered through a 
 
 ## Media
 
-## Demo video
+## Demo Video
 
-Watch the demo video in the [latest release]().
+Watch the demo video in the [latest release](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/latest).
 
-**Direct download:** [demo-video.mp4](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/blob/main/assets/video/demo-video.mp4)
+**Direct download:** [demo-video.mp4](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/download/v1.0.0/demo-video.mp4)
 
 ## Screenshots
 
