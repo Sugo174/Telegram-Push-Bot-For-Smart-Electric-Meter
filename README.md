@@ -1,4 +1,4 @@
-# Telegram Push Notification Bot For Smart Electric Meter
+# Telegram Push Notification Bot for Smart Electric Meter
 
 Python-based Telegram bot for receiving, processing, and delivering real-time push notifications from smart meters.
 
