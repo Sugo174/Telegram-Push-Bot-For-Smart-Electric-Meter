@@ -185,7 +185,6 @@ git clone https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter.
 cd Telegram-Push-Bot-For-Smart-Electric-Meter
 ```
 
-````md
 2. Create and activate a virtual environment.
 
 Windows:
@@ -194,12 +193,14 @@ Windows:
 python -m venv .venv
 .venv\Scripts\activate
 ```
+
 Linux and macOS:
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
-````
+
 3. Install the required dependencies:
 
 ```bash
