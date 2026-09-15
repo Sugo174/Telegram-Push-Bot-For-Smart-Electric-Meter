@@ -217,6 +217,14 @@ PROXY_URL=your_proxy_url
 PUSH_SERVER_PORT=23224
 ```
 
+### Windows Quick Start
+
+On Windows, you can start both the PUSH server and Telegram bot with one command:
+
+```bat
+start_all.bat
+```
+
 ### Configuration
 
 | Variable | Description |
