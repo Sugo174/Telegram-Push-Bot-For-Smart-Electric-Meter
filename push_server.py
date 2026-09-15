@@ -6,7 +6,7 @@ import os
 
 from datetime import datetime, timezone
 from logging.handlers import TimedRotatingFileHandler
-
+from pathlib import Path
 from database import (
     decode_bitmask,
     add_user_event,
@@ -15,33 +15,43 @@ from database import (
 # Загрузка настроек
 from dotenv import load_dotenv
 load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
 ADMIN_CHAT_ID = int(os.getenv("ADMIN_CHAT_ID", 0))
-DB_PATH = os.path.abspath("emis_events.db")
+DB_PATH = str(BASE_DIR / "emis_events.db")
 PUSH_SERVER_PORT = int(os.getenv("PUSH_SERVER_PORT", "23224"))
 
 # ---------------- LOGGING ----------------
 
-os.makedirs("logs", exist_ok=True)
-
 logger = logging.getLogger("PUSH")
 logger.setLevel(logging.INFO)
 
-formatter = logging.Formatter("[%(asctime)s] %(levelname)s:%(name)s: %(message)s")
 
-file_handler = TimedRotatingFileHandler(
-    filename="logs/push.log",
-    when="midnight",
-    interval=1,
-    encoding="utf-8"
-)
-file_handler.setFormatter(formatter)
-file_handler.suffix = "%Y-%m-%d"
+def configure_logging():
+    """Настраивает файловое и консольное логирование сервера."""
+    if logger.handlers:
+        return
 
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
+    logs_dir = BASE_DIR / "logs"
+    logs_dir.mkdir(exist_ok=True)
 
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
+    formatter = logging.Formatter(
+        "[%(asctime)s] %(levelname)s:%(name)s: %(message)s"
+    )
+
+    file_handler = TimedRotatingFileHandler(
+        filename=logs_dir / "push.log",
+        when="midnight",
+        interval=1,
+        encoding="utf-8",
+    )
+    file_handler.setFormatter(formatter)
+    file_handler.suffix = "%Y-%m-%d"
+
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
 
 
 # ---------------- PARSERS ----------------
@@ -122,7 +132,7 @@ async def handle_client(reader, writer):
             return
 
         # Проверка авторизации
-        async with aiosqlite.connect("emis_events.db") as db:
+        async with aiosqlite.connect(DB_PATH) as db:
             cursor = await db.execute(
                 "SELECT 1 FROM user_single_meters WHERE serial = ?",
                 (serial,)
@@ -150,8 +160,6 @@ async def handle_client(reader, writer):
 
         chat_ids = await get_chat_ids_for_meter(serial)
 
-        chat_ids = await get_chat_ids_for_meter(serial)
-
         for chat_id in chat_ids:
 
             try:
@@ -172,6 +180,7 @@ async def handle_client(reader, writer):
 # ---------------- SERVER ----------------
 
 async def start_server():
+    configure_logging()
     server = await asyncio.start_server(
         handle_client,
         "0.0.0.0",
