@@ -95,7 +95,7 @@ async def init_user_events_table():
                 bitmask INTEGER NOT NULL,
                 raw_data TEXT NOT NULL,
                 is_read INTEGER DEFAULT 0,
-                is_sent INTEGER DEFAULT 0  ← ДОБАВИТЬ ЭТУ СТРОКУ
+                is_sent INTEGER DEFAULT 0 
             )
         """)
         await db.commit()

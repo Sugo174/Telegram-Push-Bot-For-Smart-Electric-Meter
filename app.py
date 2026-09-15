@@ -10,13 +10,14 @@ from handlers import (
 )
 from database import (
     init_db,
+    init_user_events_table,
     get_unsent_events,
     mark_event_sent,
     init_multiuser_tables,
     decode_bitmask,
-    get_unread_events_count,  
-    get_user,                 
-    get_user_events_count
+    get_unread_events_count,
+    get_user,
+    get_user_events_count,
 )
 
 async def notification_loop(tg):
@@ -65,6 +66,7 @@ async def notification_loop(tg):
 
 async def main():
     await init_db()
+    await init_user_events_table()
     await init_multiuser_tables()
 
     tg = TelegramAPI()
