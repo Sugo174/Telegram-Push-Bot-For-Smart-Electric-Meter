@@ -1,5 +1,9 @@
 # Telegram Push Notification Bot for Smart Electric Meter
 
+<p align="center">
+  <img src="assets/push-notifications.png" alt="EMIS PUSH Notifications" width="320">
+</p>
+
 Python-based Telegram bot for receiving, processing, and delivering real-time push notifications from smart meters.
 
 ## Table of Contents
@@ -225,6 +229,12 @@ On Windows, you can start both the PUSH server and Telegram bot with one command
 start_all.bat
 ```
 
+### Windows Desktop Shortcut
+
+After configuring `.env`, run `setup_windows.bat` once from the project folder.
+
+It creates an **EMIS PUSH Notifications** shortcut on the desktop with the application icon. Use this shortcut to start both the PUSH server and Telegram bot.
+
 ### Configuration
 
 | Variable | Description |
@@ -269,6 +279,10 @@ python group_manager.py
 - `.gitignore` — Files and directories excluded from version control.
 - `README.md` — Project overview and setup instructions.
 - `CHANGELOG.md` — Version history and notable project changes.
+- `assets/` — Application icons, screenshots, and demonstration media.
+- `start_all.bat` — Starts the PUSH server and Telegram bot together on Windows.
+- `setup_windows.bat` — Creates the Windows desktop shortcut.
+- `create_desktop_shortcut.ps1` — Configures the shortcut target, icon, and working folder.
 
 ## Usage
 

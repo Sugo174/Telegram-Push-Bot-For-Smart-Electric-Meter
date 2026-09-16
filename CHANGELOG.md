@@ -6,6 +6,17 @@ The project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-09-16
+
+### Added
+
+- Added a custom application icon for Windows shortcuts.
+- Added `setup_windows.bat` to create a desktop shortcut automatically.
+- Added a PowerShell shortcut setup script that works from any extracted project folder.
+- Added Windows desktop shortcut instructions to the README.
+
+## [1.0.1] - 2026-09-15
+
 ### Changed
 
 - Pinned tested Python dependency versions for reproducible installation.
@@ -32,5 +43,7 @@ The project follows [Semantic Versioning](https://semver.org/).
 - Demo video and interface screenshots.
 - MIT License.
 
-[Unreleased]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v.1.0.1...v1.0.2
+[1.0.1]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/tag/v.1.0.1
 [1.0.0]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/tag/v1.0.0
