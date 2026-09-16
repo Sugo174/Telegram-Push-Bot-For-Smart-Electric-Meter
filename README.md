@@ -1,5 +1,7 @@
 # Telegram Push Notification Bot for Smart Electric Meter
 
+[![Python tests](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/actions/workflows/tests.yml/badge.svg)](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/actions/workflows/tests.yml)
+
 <p align="center">
   <img src="assets/push-notifications.png" alt="EMIS PUSH Notifications" width="320">
 </p>
