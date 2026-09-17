@@ -3,6 +3,8 @@ import os
 import ssl
 import json
 import aiohttp
+import asyncio
+import logging
 from aiohttp_socks import ProxyConnector  
 from dotenv import load_dotenv
 from database import get_setting, set_setting
@@ -13,28 +15,75 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 PROXY_URL = os.getenv("PROXY_URL")
 BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
 
+logger = logging.getLogger(__name__)
+
+REQUEST_TIMEOUT = aiohttp.ClientTimeout(
+    total=45,
+    connect=15,
+    sock_read=40,
+)
 
 class TelegramAPI:
     def __init__(self):
         self.offset = 0
+        self._reconnect_lock = asyncio.Lock()
+        self.session = self._create_session()
 
-        # Отключаем проверку сертификата
+    def _create_session(self) -> aiohttp.ClientSession:
+        """Создаёт новое соединение с Telegram через SOCKS5-прокси."""
         ssl_ctx = ssl.create_default_context()
         ssl_ctx.check_hostname = False
         ssl_ctx.verify_mode = ssl.CERT_NONE
 
-        # Правильный коннектор для SOCKS5 + SSL
-        connector = ProxyConnector.from_url(PROXY_URL, ssl=ssl_ctx)
-        self.session = aiohttp.ClientSession(connector=connector)
+        connector = ProxyConnector.from_url(
+            PROXY_URL,
+            ssl=ssl_ctx,
+        )
+
+        return aiohttp.ClientSession(
+            connector=connector,
+            timeout=REQUEST_TIMEOUT,
+        )
 
     async def close(self):
-        await self.session.close()
+        """Закрывает соединение с Telegram API."""
+        if not self.session.closed:
+            await self.session.close()
+
+    async def reconnect(self):
+        """Пересоздаёт соединение после тайм-аута или сетевой ошибки."""
+        async with self._reconnect_lock:
+            if not self.session.closed:
+                await self.session.close()
+
+            self.session = self._create_session()
 
     async def api_call(self, method, payload=None):
+        """Выполняет запрос к Telegram API и повторяет его при сбое."""
         url = f"{BASE_URL}/{method}"
-        # proxy= больше НЕ нужен, коннектор уже настроен на туннель
-        async with self.session.post(url, data=payload) as resp:
-            return await resp.json()
+
+        for attempt in range(1, 3):
+            try:
+                async with self.session.post(
+                    url,
+                    data=payload,
+                ) as response:
+                    response.raise_for_status()
+                    return await response.json()
+
+            except (aiohttp.ClientError, asyncio.TimeoutError) as error:
+                logger.warning(
+                    "Telegram API request failed: %s, attempt %s of 2: %s",
+                    method,
+                    attempt,
+                    error,
+                )
+
+                if attempt == 2:
+                    raise
+
+                await self.reconnect()
+                await asyncio.sleep(2)
 
     async def send_message(self, chat_id, text, reply_markup=None):
         payload = {"chat_id": chat_id, "text": text, "parse_mode": "HTML"}
