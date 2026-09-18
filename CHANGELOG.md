@@ -6,6 +6,8 @@ The project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-09-18
+
 ### Changed
 
 - Replaced project-specific branding with neutral Smart Meter PUSH Notifications branding.
@@ -55,6 +57,7 @@ The project follows [Semantic Versioning](https://semver.org/).
 - Demo video and interface screenshots.
 - MIT License.
 
+[1.0.4]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v.1.0.1...v1.0.2
 [1.0.1]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/tag/v.1.0.1
