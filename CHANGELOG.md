@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.0.3] - 2026-09-18
+
+### Fixed
+
+- Added automatic Telegram API reconnection after network errors and request timeouts.
+- Added request timeouts and one retry for Telegram API calls.
 
 ## [1.0.2] - 2026-09-16
 
@@ -43,7 +48,7 @@ The project follows [Semantic Versioning](https://semver.org/).
 - Demo video and interface screenshots.
 - MIT License.
 
-[Unreleased]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v1.0.2...HEAD
+[1.0.3]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/compare/v.1.0.1...v1.0.2
 [1.0.1]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/tag/v.1.0.1
 [1.0.0]: https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/releases/tag/v1.0.0
