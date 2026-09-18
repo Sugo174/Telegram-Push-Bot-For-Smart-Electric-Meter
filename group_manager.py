@@ -3,7 +3,7 @@ import sqlite3
 import os
 import sys
 
-DB_PATH = "emis_events.db"
+DB_PATH = "meter_events.db"
 
 def get_db_connection():
     """Получить подключение к базе данных."""
@@ -66,7 +66,7 @@ def update_group_meters(group_code, new_meters):
 
 def add_new_group():
     """Добавить новую группу."""
-    code = input("Введите код группы (например, EMIS-2026-001): ").strip()
+    code = input("Введите код группы (например, METER-2026-001): ").strip()
     if not code:
         print("❌ Код не может быть пустым!")
         return

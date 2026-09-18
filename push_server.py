@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 ADMIN_CHAT_ID = int(os.getenv("ADMIN_CHAT_ID", 0))
-DB_PATH = str(BASE_DIR / "emis_events.db")
+DB_PATH = str(BASE_DIR / "meter_events.db")
 PUSH_SERVER_PORT = int(os.getenv("PUSH_SERVER_PORT", "23224"))
 
 # ---------------- LOGGING ----------------

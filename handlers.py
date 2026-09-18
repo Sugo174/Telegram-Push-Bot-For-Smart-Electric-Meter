@@ -378,7 +378,7 @@ async def process_callback(tg, callback):
         })
     elif data.startswith("lang_"):
         new_lang = data.split("_")[1]
-        async with aiosqlite.connect("emis_events.db") as db:
+        async with aiosqlite.connect("meter_events.db") as db:
             # Простое UPDATE/INSERT без сложных конфликтов
             await db.execute("UPDATE users SET lang = ? WHERE chat_id = ?", (new_lang, chat_id))
             if db.total_changes == 0:

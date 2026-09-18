@@ -1,7 +1,7 @@
 # database.py
 import aiosqlite
 
-DB_PATH = "emis_events.db"
+DB_PATH = "meter_events.db"
 
 async def init_db():
     async with aiosqlite.connect(DB_PATH) as db:
