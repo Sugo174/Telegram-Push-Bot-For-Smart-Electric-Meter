@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Replaced project-specific branding with neutral Smart Meter PUSH Notifications branding.
+- Renamed the default database file for new installations to `meter_events.db`.
+
 ## [1.0.3] - 2026-09-18
 
 ### Fixed
