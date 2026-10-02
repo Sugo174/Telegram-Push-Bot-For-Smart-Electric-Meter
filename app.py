@@ -54,8 +54,19 @@ async def notification_loop(tg):
 
                 keyboard = {"inline_keyboard": [[{"text": t(lang_code, 'back'), "callback_data": "back_to_menu"}]]}
 
-                await tg.send_clean_message(ev["chat_id"], text, keyboard)
-                await mark_event_sent(ev["id"])
+                # PUSH отправляем новым сообщением, чтобы Telegram
+                # уведомил пользователя о событии.
+                result = await tg.send_clean_message(
+                    ev["chat_id"],
+                    text,
+                    keyboard,
+                    is_notification=True,
+                )
+
+                # Событие считается доставленным только после
+                # подтверждения Telegram. Иначе оно остаётся в очереди.
+                if result.get("ok"):
+                    await mark_event_sent(ev["id"])
 
         except Exception as e:
             import traceback

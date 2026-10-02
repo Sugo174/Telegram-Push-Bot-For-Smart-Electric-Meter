@@ -3,6 +3,7 @@ import asyncio
 import aiosqlite
 from datetime import datetime, timezone, timedelta
 from database import (
+    DB_PATH,
     get_user,
     get_unread_events_count,
     get_user_events,
@@ -330,11 +331,11 @@ async def process_callback(tg, callback):
     data = callback["data"]
     chat_id = callback["message"]["chat"]["id"]
     
-    # Немедленно подтверждаем Telegram, чтобы не было повторных отправок
-    try:
-        await callback.answer()
-    except:
-        pass
+    # Подтверждаем нажатие, чтобы Telegram убрал индикатор ожидания.
+    await tg.api_call(
+        "answerCallbackQuery",
+        {"callback_query_id": callback["id"]},
+    )
 
     user = await get_user(chat_id)
     lang = user.get("lang") if user else (await get_setting(f"user_lang_{chat_id}") or "ru")
@@ -378,7 +379,7 @@ async def process_callback(tg, callback):
         })
     elif data.startswith("lang_"):
         new_lang = data.split("_")[1]
-        async with aiosqlite.connect("meter_events.db") as db:
+        async with aiosqlite.connect(DB_PATH) as db:
             # Простое UPDATE/INSERT без сложных конфликтов
             await db.execute("UPDATE users SET lang = ? WHERE chat_id = ?", (new_lang, chat_id))
             if db.total_changes == 0:
@@ -425,13 +426,49 @@ async def process_message(tg, message):
     if not text: return
 
     if text == "/start":
-        kb = {"inline_keyboard": [
-            [{"text": t('ru', 'conn_s'), "callback_data": "set_serial"}],
-            [{"text": t('ru', 'conn_g'), "callback_data": "set_group"}],
-            [{"text": t('ru', 'lang_btn'), "callback_data": "select_lang"}],
-            [{"text": t('ru', 'main_menu'), "callback_data": "back_to_menu"}]
-        ]}
-        await tg.send_clean_message(chat_id, t('ru', 'welcome'), kb)
+        # Завершаем незаконченный ввод номера или кода группы.
+        await set_setting(f"waiting_serial_{chat_id}", "0")
+        await set_setting(f"waiting_group_{chat_id}", "0")
+
+        user = await get_user(chat_id)
+
+        if user:
+            lang = user.get("lang") or "ru"
+        else:
+            lang = await get_setting(f"user_lang_{chat_id}") or "ru"
+
+        if user:
+            # Для существующего пользователя открываем главное меню.
+            await show_main_menu(tg, chat_id, lang=lang)
+        else:
+            # Новому пользователю предлагаем подключение.
+            keyboard = {
+                "inline_keyboard": [
+                    [{
+                        "text": t(lang, "conn_s"),
+                        "callback_data": "set_serial",
+                    }],
+                    [{
+                        "text": t(lang, "conn_g"),
+                        "callback_data": "set_group",
+                    }],
+                    [{
+                        "text": t(lang, "lang_btn"),
+                        "callback_data": "select_lang",
+                    }],
+                    [{
+                        "text": t(lang, "main_menu"),
+                        "callback_data": "back_to_menu",
+                    }],
+                ]
+            }
+
+            await tg.send_clean_message(
+                chat_id,
+                t(lang, "welcome"),
+                keyboard,
+            )
+
         return
 
     # Проверка режимов ввода

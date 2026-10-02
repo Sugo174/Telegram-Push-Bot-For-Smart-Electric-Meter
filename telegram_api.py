@@ -26,6 +26,9 @@ REQUEST_TIMEOUT = aiohttp.ClientTimeout(
 class TelegramAPI:
     def __init__(self):
         self.offset = 0
+        # Каждый чат заменяет сообщения последовательно.
+        # Это защищает от одновременного PUSH и нажатия кнопки.
+        self._chat_locks = {}
         self._reconnect_lock = asyncio.Lock()
         self.session = self._create_session()
 
@@ -68,8 +71,21 @@ class TelegramAPI:
                     url,
                     data=payload,
                 ) as response:
-                    response.raise_for_status()
-                    return await response.json()
+                    result = await response.json()
+
+                    # Telegram сообщает причину отказа в JSON.
+                    # Например: сообщение слишком старое для удаления.
+                    if response.status >= 500:
+                        response.raise_for_status()
+
+                    if not result.get("ok"):
+                        logger.warning(
+                            "Telegram rejected %s: %s",
+                            method,
+                            result.get("description", "Unknown error"),
+                        )
+
+                    return result
 
             except (aiohttp.ClientError, asyncio.TimeoutError) as error:
                 logger.warning(
@@ -93,28 +109,123 @@ class TelegramAPI:
 
     async def edit_message(self, chat_id, message_id, text, reply_markup=None):
         payload = {"chat_id": chat_id, "message_id": message_id, "text": text, "parse_mode": "HTML"}
-        if reply_markup:
-            payload["reply_markup"] = json.dumps(reply_markup)
+        # Явно заменяем клавиатуру, включая удаление прежних кнопок.
+        payload["reply_markup"] = json.dumps(
+            reply_markup
+            if reply_markup is not None
+            else {"inline_keyboard": []}
+        )
         return await self.api_call("editMessageText", payload)
 
     async def delete_message(self, chat_id, message_id):
         return await self.api_call("deleteMessage", {"chat_id": chat_id, "message_id": message_id})
 
-    async def send_clean_message(self, chat_id, text, reply_markup=None):
-        """Удаляет предыдущее сообщение и отправляет новое (режим одного окна)."""
-        key = f"last_msg_{chat_id}"
-        last_msg_id = await get_setting(key)
-        
-        if last_msg_id:
-            try:
-                await self.delete_message(chat_id, int(last_msg_id))
-            except:
-                pass
-        
-        result = await self.send_message(chat_id, text, reply_markup)
-        if result.get("ok"):
-            await set_setting(key, str(result["result"]["message_id"]))
-        return result
+    async def send_clean_message(
+        self,
+        chat_id,
+        text,
+        reply_markup=None,
+        *,
+        is_notification=False,
+    ):
+        """Заменяет последнее окно и сохраняет его ID.
+
+        Для обычных экранов использует редактирование, если удаление
+        запрещено. Уведомления отправляет новым сообщением, чтобы
+        пользователь получил уведомление Telegram.
+        """
+        lock = self._chat_locks.setdefault(chat_id, asyncio.Lock())
+
+        async with lock:
+            key = f"last_msg_{chat_id}"
+            saved_id = await get_setting(key)
+            previous_id = int(saved_id) if saved_id else None
+            previous_remains = False
+
+            if previous_id is not None:
+                deletion = await self.delete_message(
+                    chat_id,
+                    previous_id,
+                )
+
+                if not deletion.get("ok"):
+                    description = deletion.get("description", "").lower()
+
+                    if "message to delete not found" in description:
+                        # Пользователь уже удалил это сообщение.
+                        previous_id = None
+
+                    elif "message can't be deleted" in description:
+                        previous_remains = True
+
+                        if not is_notification:
+                            edited = await self.edit_message(
+                                chat_id,
+                                previous_id,
+                                text,
+                                reply_markup,
+                            )
+
+                            edit_description = edited.get(
+                                "description", ""
+                            ).lower()
+
+                            if edited.get("ok"):
+                                return edited
+
+                            if "message is not modified" in edit_description:
+                                # Нужный экран уже отображается.
+                                return {"ok": True, "result": True}
+
+                            if "message to edit not found" in edit_description:
+                                previous_id = None
+                                previous_remains = False
+                            else:
+                                # При неизвестном отказе не создаём дубликат.
+                                return edited
+
+                    else:
+                        # При других ошибках сохраняем старый ID
+                        # и передаём ошибку вызывающему коду.
+                        return deletion
+
+            sent = await self.send_message(
+                chat_id,
+                text,
+                reply_markup,
+            )
+
+            if not sent.get("ok"):
+                return sent
+
+            # Запоминаем новое сообщение только после подтверждения.
+            await set_setting(
+                key,
+                str(sent["result"]["message_id"]),
+            )
+
+            if previous_remains and previous_id is not None:
+                # Старый PUSH или экран остаётся без рабочих кнопок.
+                try:
+                    await self.api_call(
+                        "editMessageReplyMarkup",
+                        {
+                            "chat_id": chat_id,
+                            "message_id": previous_id,
+                            "reply_markup": json.dumps(
+                                {"inline_keyboard": []}
+                            ),
+                        },
+                    )
+                except (aiohttp.ClientError, asyncio.TimeoutError):
+                    logger.warning(
+                        "Could not remove buttons from old message "
+                        "%s in chat %s",
+                        previous_id,
+                        chat_id,
+                    )
+
+            return sent
 
     async def get_updates(self):
         payload = {"timeout": 30, "offset": self.offset}
