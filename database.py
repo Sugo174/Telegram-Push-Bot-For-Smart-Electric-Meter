@@ -1,7 +1,8 @@
 # database.py
 import aiosqlite
+from pathlib import Path
 
-DB_PATH = "meter_events.db"
+DB_PATH = str(Path(__file__).resolve().parent / "meter_events.db")
 
 async def init_db():
     async with aiosqlite.connect(DB_PATH) as db:

@@ -78,11 +78,57 @@ class TelegramAPI:
                     if response.status >= 500:
                         response.raise_for_status()
 
-                    if not result.get("ok"):
+                    if result.get("error_code") == 429:
+                        # Telegram ограничил частоту запросов.
+                        # Ждём указанный срок перед дальнейшей работой.
+                        retry_after = max(
+                            1,
+                            int(
+                                result.get("parameters", {}).get(
+                                    "retry_after", 5
+                                )
+                            ),
+                        )
+
                         logger.warning(
+                            "Telegram rate limit for %s: waiting %s seconds",
+                            method,
+                            retry_after,
+                        )
+
+                        await asyncio.sleep(retry_after + 1)
+                        return result
+
+                    if not result.get("ok"):
+                        description = result.get(
+                            "description", "Unknown error"
+                        )
+
+                        # Эти отказы предусмотрены логикой замены окон.
+                        expected_error = (
+                            method == "deleteMessage"
+                            and (
+                                "message can't be deleted"
+                                in description.lower()
+                                or "message to delete not found"
+                                in description.lower()
+                            )
+                        ) or (
+                            method == "editMessageText"
+                            and "message is not modified"
+                            in description.lower()
+                        )
+
+                        log = (
+                            logger.debug
+                            if expected_error
+                            else logger.warning
+                        )
+
+                        log(
                             "Telegram rejected %s: %s",
                             method,
-                            result.get("description", "Unknown error"),
+                            description,
                         )
 
                     return result
