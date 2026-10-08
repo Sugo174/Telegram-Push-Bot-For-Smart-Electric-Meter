@@ -66,6 +66,12 @@ async def notification_loop(tg):
                 # Событие считается доставленным только после
                 # подтверждения Telegram. Иначе оно остаётся в очереди.
                 if result.get("ok"):
+                    print(
+                        f"PUSH sent: event_id={ev['id']} "
+                        f"chat_id={ev['chat_id']} "
+                        f"result={result.get('result')}",
+                        flush=True,
+                    )
                     await mark_event_sent(ev["id"])
 
         except Exception as e:

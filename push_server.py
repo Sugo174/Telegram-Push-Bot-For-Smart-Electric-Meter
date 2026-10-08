@@ -14,6 +14,7 @@ from database import (
     get_unread_events_count,
 )
 from push_transport import read_push_packet
+from push_parser import PushParseError, parse_push_packet
 # Загрузка настроек
 from dotenv import load_dotenv
 load_dotenv()
@@ -53,35 +54,6 @@ def configure_logging():
 
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
-
-
-# ---------------- PARSERS ----------------
-
-def extract_serial(data: bytes) -> str:
-    for i in range(len(data) - 10):
-        chunk = data[i:i+11]
-        if len(chunk) == 11 and all(0x30 <= b <= 0x39 for b in chunk):
-            try:
-                return chunk.decode("ascii")
-            except:
-                continue
-    return ""
-
-
-def extract_bitmask(data: bytes) -> int:
-    last_value = 0
-    pos = 0
-
-    while True:
-        pos = data.find(b"\x06", pos)
-        if pos == -1:
-            break
-        if pos + 5 <= len(data):
-            value_bytes = data[pos + 1:pos + 5]
-            last_value = int.from_bytes(value_bytes, "big")
-        pos += 1
-
-    return last_value
 
 
 # ---------------- DB ----------------
@@ -142,7 +114,17 @@ async def handle_client(reader, writer):
                 raw_data.hex(),
             )
 
-            serial = extract_serial(raw_data)
+            try:
+                parsed = parse_push_packet(raw_data)
+            except PushParseError as error:
+                logger.warning(
+                    "Пакет от %s пропущен: %s",
+                    addr,
+                    error,
+                )
+                continue
+
+            serial = parsed.serial
 
             if (
                 not serial.isdigit()
@@ -178,13 +160,19 @@ async def handle_client(reader, writer):
                 )
                 continue
 
-            # Разбор маски пока прежний.
-            # Следующим шагом заменим его разбором объектов DLMS.
-            bitmask = extract_bitmask(raw_data)
+            bitmask = parsed.bitmask
+            if bitmask is None:
+                logger.info(
+                    "Счётчик %s: объект маски тревог отсутствует, "
+                    "уведомление не создаём",
+                    serial,
+                )
+                continue
 
             logger.info(
-                "Счётчик %s | предполагаемая маска: 0x%X",
+                "Счётчик %s | объект тревог %s | маска: 0x%X",
                 serial,
+                parsed.alarm_obis,
                 bitmask,
             )
 
