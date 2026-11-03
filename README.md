@@ -1,6 +1,10 @@
 # Telegram Push Notification Bot for Smart Electric Meter
 
+[Русская версия](README.ru.md) · [Changelog](CHANGELOG.md) · [Security](SECURITY.md)
+
 [![Python tests](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/actions/workflows/tests.yml/badge.svg)](https://github.com/Sugo174/Telegram-Push-Bot-For-Smart-Electric-Meter/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 <p align="center">
   <img src="assets/push-notifications.png" alt="Smart Meter PUSH Notifications" width="320">
@@ -19,7 +23,9 @@ Python-based Telegram bot for receiving, processing, and delivering real-time pu
 - [Project Structure](#project-structure)
 - [Usage](#usage)
 - [Compatibility and Limitations](#compatibility-and-limitations)
+- [Documentation](#documentation)
 - [Media](#media)
+- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
@@ -70,8 +76,12 @@ Group access keys are later used by Telegram bot users to subscribe to push noti
 ### 3. Telegram Bot
 The Telegram bot provides the user-facing interface for receiving and managing meter notifications.
 The bot operates through a proxy to support deployment in environments where direct access to the Telegram API may be restricted.
-The interface is designed around a single-message workflow: when the user navigates between sections, the previous message is replaced instead of creating a growing conversation history.
-When a new push notification is received, it is displayed as the active message in the bot interface.
+During navigation, the bot attempts to keep one active interface message.
+New PUSH notifications are sent as new messages to notify the user.
+
+Previous messages may remain when Telegram rejects their deletion.
+Clearing the event archive and deleting Telegram chat messages
+are separate operations.
 
 ## Key Features
 
@@ -94,9 +104,9 @@ Users can configure push notification sources directly through the Telegram bot:
 
 ### Telegram Interface
 
-- Single-message navigation interface
-- Previous interface messages are automatically replaced
-- Incoming push notifications are displayed directly in the active bot message
+- Navigation designed around one active interface message
+- Previous messages are removed where permitted by Telegram
+- New PUSH notifications are sent as separate messages
 - Multilingual interface:
   - Russian
   - English
@@ -225,17 +235,34 @@ PUSH_SERVER_PORT=23224
 
 ### Windows Quick Start
 
-On Windows, you can start both the PUSH server and Telegram bot with one command:
+For a first installation, start the bot first and wait for
+database initialization, then start the PUSH server.
+
+After initial setup, `start_all.bat` can open both components:
 
 ```bat
 start_all.bat
 ```
 
+The batch file uses the `python` command from its launch environment.
+It does not explicitly select `.venv`.
+
+If dependencies are installed only in `.venv`, launch it from
+a terminal with that environment activated, or use the direct
+commands in [Running on Windows](docs/RUN_WINDOWS.md).
+
 ### Windows Desktop Shortcut
 
-After configuring `.env`, run `setup_windows.bat` once from the project folder.
+After configuring `.env`, run `setup_windows.bat`
+from the project folder.
 
-It creates an **Smart Meter PUSH Notifications** shortcut on the desktop with the application icon. Use this shortcut to start both the PUSH server and Telegram bot.
+It creates a **Smart Meter PUSH Notifications** desktop shortcut.
+It does not install Python or dependencies, and shortcut startup
+does not guarantee use of the project's virtual environment.
+
+If startup reports missing modules, use the direct
+virtual-environment commands in the Windows guide.
+
 
 ### Configuration
 
@@ -248,17 +275,25 @@ It creates an **Smart Meter PUSH Notifications** shortcut on the desktop with th
 
 Keep the `.env` file private. It is excluded from Git through `.gitignore` and must never be committed to the repository.
 
-5. Start the PUSH server:
+5. Start the Telegram bot first:
+
+```bash
+python app.py
+```
+
+Wait for `Bot started`. The bot initializes the required database tables.
+
+6. In another terminal using the same Python environment,
+   start the PUSH server:
 
 ```bash
 python push_server.py
 ```
 
-6. Start the Telegram bot:
+Keep both processes running. Run commands from the repository root.
 
-```bash
-python app.py
-```
+For Windows commands that explicitly select the virtual environment,
+see [Running on Windows](docs/RUN_WINDOWS.md).
 
 ### Group Management
 
@@ -309,6 +344,12 @@ The PUSH server processes messages only for meters already registered through a 
 - Direct Telegram API connectivity without a proxy is planned but has not yet been tested.
 - TLS certificate verification is disabled for Telegram API connections in the current proxy configuration because it is required by the tested deployment environment. Use only a trusted proxy server.
 
+## Documentation
+
+- [Windows startup, updates, and troubleshooting](docs/RUN_WINDOWS.md).
+- [Инструкция для Windows на русском](docs/RUN_WINDOWS_RU.md).
+- [Changelog](CHANGELOG.md).
+
 ## Media
 
 ### Demo Video
@@ -338,6 +379,14 @@ Watch the demo video in the [latest release](https://github.com/Sugo174/Telegram
 #### Language Selection
 
 ![Telegram bot interface language selection](assets/screenshots/Languages.png)
+
+## Contributing
+
+For development setup, validation, and issue reporting,
+see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+For vulnerability reporting and handling operational secrets,
+see [SECURITY.md](SECURITY.md).
 
 ## License
 
